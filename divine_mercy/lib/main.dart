@@ -1,9 +1,13 @@
 import 'package:divine_mercy/message_page.dart';
+import 'package:divine_mercy/user_state.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:provider/provider.dart';
+// import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => UserState()),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -11,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Divine Mercy',
       theme: ThemeData(
         // This is the theme of your application.
@@ -63,7 +68,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return
+
+        // MultiProvider(
+        //       providers: [
+        //     ChangeNotifierProvider.value(
+        //       value: Counter(),
+        //     ),
+        //   ],
+
+        Container(
       decoration: BoxDecoration(
           color: Colors.black87,
           image: DecorationImage(
@@ -103,7 +117,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       MaterialPageRoute(builder: (context) => MessagePage()),
                     )
                   },
-                  //trailing: Icon(Icons.favorite_outline),
+                  trailing:
+                      /*Icon(
+                      Icons.favorite_outline,
+                      color: Colors.amber,
+                    ) */
+                      Consumer<UserState>(
+                          builder: (context, userState, child) => Text(
+                              userState.messageIndex.toString(),
+                              style: TextStyle(color: Colors.white))),
                 ),
               ),
               Card(
@@ -137,11 +159,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
   }

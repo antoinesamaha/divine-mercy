@@ -1,5 +1,5 @@
 name: divine_mercy
-description: A new Flutter project.
+description: Divine Mercy in my soul
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -23,7 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  provider: ^6.0.0
+  shared_preferences: ^2.0.8
   # shimmer: ^2.0.0
   animated_text_kit: ^4.2.1
 
@@ -34,6 +35,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.2
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/ic_launcher.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

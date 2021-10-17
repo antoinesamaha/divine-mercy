@@ -1,41 +1,135 @@
 import 'package:divine_mercy/user_state.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'messages.dart';
 
-class MessagePage extends StatelessWidget {
-  int index = UserState().messageIndex;
+class MessagePage extends StatefulWidget {
+  const MessagePage({Key? key}) : super(key: key);
 
   @override
+  _MessagePageState createState() => _MessagePageState();
+}
+
+/*
+class _MessagePageState extends State<MessagePage> {
+  @override
   Widget build(BuildContext context) {
-    return
-        //Container(
-        // decoration: BoxDecoration(
-        //     color: Colors.black87,
-        //     image: DecorationImage(
-        //         image: AssetImage("assets/images/divine_mercy_1934.jpg"),
-        //         fit: BoxFit.scaleDown)),
-        //child:
-        Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.black87,
-              title: Text("Message " + index.toString()),
-            ),
-            body: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                  Text(
-                    Messages().getMessage(index),
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 16,
-                        //color: Colors.white,
-                        fontWeight: FontWeight.bold),
+    double textWidth = MediaQuery.of(context).size.width * 0.8;
+
+    return Consumer<UserState>(
+        builder: (context, userState, child) => Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: Colors.redAccent,
+                title: Text("Message " + userState.messageIndex.toString()),
+              ),
+              body: Text(
+                "Hello",
+                textAlign: TextAlign.left,
+                //overflow: TextOverflow.ellipsis,
+              ),
+              bottomNavigationBar: BottomAppBar(
+                color: Colors.redAccent,
+                child: Container(
+                  height: 50,
+                ),
+              ),
+              /*
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  FloatingActionButton(
+                    heroTag: "previous",
+                    onPressed: () {
+                      Provider.of<UserState>(context, listen: false)
+                          .previousPage();
+                    },
+                    child: Icon(Icons.navigate_before),
+                  ),
+                  FloatingActionButton(
+                    heroTag: "next",
+                    onPressed: () {
+                      Provider.of<UserState>(context, listen: false).nextPage();
+                    },
+                    child: Icon(Icons.navigate_next),
                   )
-                ])));
+                ],
+              ),
+            )*/
+            ));
+    //);
+  }
+}
+*/
+
+class _MessagePageState extends State<MessagePage> {
+  @override
+  Widget build(BuildContext context) {
+    double textWidth = MediaQuery.of(context).size.width * 0.8;
+
+    return Consumer<UserState>(
+        builder: (context, userState, child) => Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.redAccent,
+              title: Text("Message " + userState.messageIndex.toString()),
+            ),
+            body: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Center(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Flexible(
+                        child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Text(
+                              Messages().getMessage(userState.messageIndex),
+                              textAlign: TextAlign.left,
+                              //overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  //color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )))
+                  ],
+                ))),
+            bottomNavigationBar: BottomAppBar(
+              color: Colors.redAccent,
+              child: Container(
+                height: 50,
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  FloatingActionButton(
+                    heroTag: "previous",
+                    onPressed: () {
+                      Provider.of<UserState>(context, listen: false)
+                          .previousPage();
+                    },
+                    child: Icon(Icons.navigate_before),
+                  ),
+                  FloatingActionButton(
+                    heroTag: "next",
+                    onPressed: () {
+                      Provider.of<UserState>(context, listen: false).nextPage();
+                    },
+                    child: Icon(Icons.navigate_next),
+                  )
+                ],
+              ),
+            )));
     //);
   }
 }

@@ -1,15 +1,5 @@
 class Messages {
-  int MAX = 1828;
-
   Messages() {}
-
-  int getNextIndex(int idx) {
-    return idx + 1;
-  }
-
-  int getPreviousIndex(int idx) {
-    return idx - 1;
-  }
 
   String getMessage(int idx) {
     String message = "Not Found";
