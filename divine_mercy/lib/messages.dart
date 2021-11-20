@@ -9,7 +9,7 @@ class Messages {
             "And reveal to us the inconceivable fount of mercy,\n " +
             "You bless whoever approaches Your rays,\n " +
             "And a soul all black will turn into snow.\n " +
-            "O sweet Jesus, it is here² You established the throne of Your mercy\n " +
+            "O sweet Jesus, it is here You established the throne of Your mercy\n " +
             "To bring joy and hope to sinful man,\n " +
             "From Your open Heart, as from a pure fount,\n " +
             "Flows comfort to a repentant heart and soul.\n " +

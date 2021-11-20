@@ -2,6 +2,8 @@ import 'package:divine_mercy/message_page.dart';
 import 'package:divine_mercy/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() {
@@ -17,6 +19,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Divine Mercy',
+      locale: Provider.of<UserState>(context, listen: false).locale,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''), // English, no country code
+        Locale('pl', ''), // Polish, no country code
+      ],
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -66,6 +79,52 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Card diaryCard(bool random) {
+    return Card(
+      elevation: 0,
+      color: Colors.transparent.withOpacity(0.5),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          side: BorderSide(width: 2, color: Colors.redAccent)),
+      child: ListTile(
+        title: Text("St Faustina's Diary",
+            style: TextStyle(color: Colors.white.withOpacity(0.8))),
+        subtitle: Text("Divine Mercy In My Saul",
+            style: TextStyle(color: Colors.white.withOpacity(0.6))),
+        onTap: () => {
+          if (random)
+            {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MessagePage(
+                          random: true,
+                        )),
+              )
+            }
+          else
+            {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MessagePage()),
+              )
+            }
+        },
+        trailing:
+            /*Icon(
+                      Icons.favorite_outline,
+                      color: Colors.amber,
+                    ) */
+            Consumer<UserState>(
+                builder: (context, userState, child) => Text(
+                    random
+                        ? "Random message"
+                        : "Next message #" + userState.messageIndex.toString(),
+                    style: TextStyle(color: Colors.white))),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return
@@ -89,6 +148,39 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Colors.transparent,
           title: Text(widget.title),
         ),
+        drawer: Drawer(
+          // Add a ListView to the drawer. This ensures the user can scroll
+          // through the options in the drawer if there isn't enough vertical
+          // space to fit everything.
+          child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: [
+              /*
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text('Drawer Header'),
+              ),
+              */
+              ListTile(
+                leading: Icon(
+                  Icons.settings,
+                  color: Colors.black,
+                ),
+                title: const Text('Settings'),
+                tileColor: Colors.redAccent,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,34 +192,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ScaleAnimatedText("In You"),
                 ScaleAnimatedText("Jesus I Trust In You")
               ]),*/
-              Card(
-                elevation: 0,
-                color: Colors.transparent.withOpacity(0.5),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    side: BorderSide(width: 2, color: Colors.redAccent)),
-                child: ListTile(
-                  title: Text("St Faustina's Diary",
-                      style: TextStyle(color: Colors.white.withOpacity(0.8))),
-                  subtitle: Text("Divine Mercy In My Saul",
-                      style: TextStyle(color: Colors.white.withOpacity(0.6))),
-                  onTap: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MessagePage()),
-                    )
-                  },
-                  trailing:
-                      /*Icon(
-                      Icons.favorite_outline,
-                      color: Colors.amber,
-                    ) */
-                      Consumer<UserState>(
-                          builder: (context, userState, child) => Text(
-                              userState.messageIndex.toString(),
-                              style: TextStyle(color: Colors.white))),
-                ),
-              ),
+              diaryCard(false),
+              diaryCard(true),
               Card(
                 elevation: 0,
                 color: Colors.transparent.withOpacity(0.5),
