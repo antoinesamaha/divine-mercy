@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'cards/diary_card.dart';
 // import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() {
@@ -66,65 +68,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  Card diaryCard(bool random) {
-    return Card(
-      elevation: 0,
-      color: Colors.transparent.withOpacity(0.5),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          side: BorderSide(width: 2, color: Colors.redAccent)),
-      child: ListTile(
-        title: Text("St Faustina's Diary",
-            style: TextStyle(color: Colors.white.withOpacity(0.8))),
-        subtitle: Text("Divine Mercy In My Saul",
-            style: TextStyle(color: Colors.white.withOpacity(0.6))),
-        onTap: () => {
-          if (random)
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MessagePage(
-                          random: true,
-                        )),
-              )
-            }
-          else
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MessagePage()),
-              )
-            }
-        },
-        trailing:
-            /*Icon(
-                      Icons.favorite_outline,
-                      color: Colors.amber,
-                    ) */
-            Consumer<UserState>(
-                builder: (context, userState, child) => Text(
-                    random
-                        ? "Random message"
-                        : "Next message #" + userState.messageIndex.toString(),
-                    style: TextStyle(color: Colors.white))),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return
@@ -192,8 +135,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ScaleAnimatedText("In You"),
                 ScaleAnimatedText("Jesus I Trust In You")
               ]),*/
-              diaryCard(false),
-              diaryCard(true),
+              DiaryCard(random: false),
+              DiaryCard(random: true),
+              // diaryCard(false),
+              // diaryCard(true),
               Card(
                 elevation: 0,
                 color: Colors.transparent.withOpacity(0.5),

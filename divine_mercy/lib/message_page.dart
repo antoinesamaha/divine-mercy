@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:divine_mercy/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -8,9 +6,9 @@ import 'package:provider/provider.dart';
 import 'messages.dart';
 
 class MessagePage extends StatefulWidget {
-  final bool random;
+  int randomIndex = 0;
 
-  const MessagePage({this.random: false, Key? key}) : super(key: key);
+  MessagePage({Key? key}) : super(key: key) {}
 
   @override
   _MessagePageState createState() => _MessagePageState();
@@ -77,17 +75,14 @@ class _MessagePageState extends State<MessagePage> {
   Widget build(BuildContext context) {
     double textWidth = MediaQuery.of(context).size.width * 0.8;
 
-    var randomGenerator = new Random();
-    int randomIndex = randomGenerator.nextInt(1800);
-
     return Consumer<UserState>(
         builder: (context, userState, child) => Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.redAccent,
               title: Text("Message " +
-                  (widget.random
-                      ? randomIndex.toString()
+                  (userState.randomMode
+                      ? userState.randomIndex.toString()
                       : userState.messageIndex.toString())),
             ),
             body: Padding(
@@ -103,8 +98,8 @@ class _MessagePageState extends State<MessagePage> {
                         data: "<div style=\"color:black;font-size:" +
                             userState.fontSize.toString() +
                             "px;\">" +
-                            (widget.random
-                                ? Messages().getMessage(randomIndex)
+                            (userState.randomMode
+                                ? Messages().getMessage(userState.randomIndex)
                                 : Messages()
                                     .getMessage(userState.messageIndex)) +
                             "</div>",

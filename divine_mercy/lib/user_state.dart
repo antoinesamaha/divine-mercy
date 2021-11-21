@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:divine_mercy/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,12 +18,38 @@ class UserState extends ChangeNotifier {
   int messageIndex = 1;
   Locale _locale = Locale(LANGUAGE_ENGLISH);
 
+  bool _randomMode = false;
+  int _randomIndex = 0;
+
   UserState() {
     load();
   }
 
   Locale get locale {
     return _locale;
+  }
+
+  bool get randomMode {
+    return _randomMode;
+  }
+
+  set randomMode(bool mode) {
+    _randomMode = mode;
+    if (mode == false) _randomIndex = 0;
+  }
+
+  int get randomIndex {
+    if (_randomIndex == 0) {
+      var randomGenerator = new Random();
+      int max = Messages().MAX;
+      _randomIndex = randomGenerator.nextInt(max);
+    }
+
+    return _randomIndex;
+  }
+
+  set randomIndex(int index) {
+    _randomIndex = index;
   }
 
   set locale(Locale l) {
@@ -57,17 +86,29 @@ class UserState extends ChangeNotifier {
   }
 
   nextPage() {
-    messageIndex++;
-    if (messageIndex > MAX) messageIndex = 1;
-    notifyListeners();
-    save();
+    if (randomMode) {
+      randomIndex++;
+      if (randomIndex > MAX) randomIndex = 1;
+      notifyListeners();
+    } else {
+      messageIndex++;
+      if (messageIndex > MAX) messageIndex = 1;
+      notifyListeners();
+      save();
+    }
   }
 
   previousPage() {
-    messageIndex--;
-    if (messageIndex <= 0) messageIndex = MAX;
-    notifyListeners();
-    save();
+    if (randomMode) {
+      randomIndex--;
+      if (randomIndex <= 0) randomIndex = MAX;
+      notifyListeners();
+    } else {
+      messageIndex--;
+      if (messageIndex <= 0) messageIndex = MAX;
+      notifyListeners();
+      save();
+    }
   }
 }
 

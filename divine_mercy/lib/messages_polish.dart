@@ -1,4 +1,6 @@
 class MessagesPolish {
+  final int MAX = 1667;
+
   MessagesPolish() {}
 
   String getMessage(int idx) {

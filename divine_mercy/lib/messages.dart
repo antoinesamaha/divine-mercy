@@ -1,4 +1,6 @@
 class Messages {
+  final int MAX = 1828;
+
   Messages() {}
 
   String getMessage(int idx) {
