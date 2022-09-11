@@ -13,10 +13,8 @@ class NovenaPage extends StatefulWidget {
 
   @override
   _NovenaPageState createState() => _NovenaPageState();
-}
 
-class _NovenaPageState extends State<NovenaPage> {
-  String _htmlText(int fontSize, bool bold, String text) {
+  static String htmlText(int fontSize, bool bold, String text) {
     String boldSection = bold ? "font-weight: bold;" : "";
     return "<div style=\"" +
         boldSection +
@@ -26,11 +24,11 @@ class _NovenaPageState extends State<NovenaPage> {
         text +
         "</div></br>";
   }
+}
 
+class _NovenaPageState extends State<NovenaPage> {
   @override
   Widget build(BuildContext context) {
-    double textWidth = MediaQuery.of(context).size.width * 0.8;
-
     return Consumer<UserState>(
       builder: (context, userState, child) => GestureDetector(
           onHorizontalDragEnd: (dragEndDetails) {
@@ -62,38 +60,28 @@ class _NovenaPageState extends State<NovenaPage> {
                           child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         child: SelectableHtml(
-                          data: _htmlText(userState.fontSize + 3, true,
-                                  "Introduction") +
-                              _htmlText(
+                          data: NovenaPage.htmlText(userState.fontSize + 3,
+                                  true, "Introduction") +
+                              NovenaPage.htmlText(
                                   userState.fontSize,
                                   false,
                                   (DMNovenaDays.getIntroduction(
                                       userState.currentNovenaDay()))) +
-                              _htmlText(userState.fontSize + 3, true,
+                              NovenaPage.htmlText(userState.fontSize + 3, true,
                                   "Prayer to Jesus") +
-                              _htmlText(
+                              NovenaPage.htmlText(
                                   userState.fontSize,
                                   false,
                                   (DMNovenaDays.getPrayerToJesus(
                                       userState.currentNovenaDay()))) +
-                              _htmlText(userState.fontSize + 3, true,
+                              NovenaPage.htmlText(userState.fontSize + 3, true,
                                   "Prayer to the Father") +
-                              _htmlText(
+                              NovenaPage.htmlText(
                                   userState.fontSize,
                                   false,
                                   (DMNovenaDays.getPrayerToTheFather(
                                       userState.currentNovenaDay()))),
                         ),
-                        /*
-                            Text(
-                              Messages().getMessage(userState.messageIndex),
-                              textAlign: TextAlign.left,
-                              //overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  //color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            )*/
                       ))
                     ],
                   ))),

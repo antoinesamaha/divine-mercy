@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'cards/diary_card.dart';
+import 'chapelet_page.dart';
 import 'l10n/l10n.dart';
 import 'novena_page.dart';
 // import 'package:animated_text_kit/animated_text_kit.dart';
@@ -99,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ),
+        /*
         drawer: Drawer(
           // Add a ListView to the drawer. This ensures the user can scroll
           // through the options in the drawer if there isn't enough vertical
@@ -107,14 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
             // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
             children: [
-              /*
               const DrawerHeader(
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),
                 child: Text('Drawer Header'),
               ),
-              */
               ListTile(
                 leading: Icon(
                   Icons.settings,
@@ -133,6 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
+        */
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -146,24 +147,29 @@ class _MyHomePageState extends State<MyHomePage> {
               ]),*/
               DiaryCard(random: false),
               DiaryCard(random: true),
-              Card(
-                elevation: 0,
-                color: Colors.transparent.withOpacity(0.5),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    side: BorderSide(width: 2, color: Colors.redAccent)),
-                child: ListTile(
-                  title: Text("Novena",
-                      style: TextStyle(color: Colors.white.withOpacity(0.8))),
-                  subtitle: Text("Divine Mercy Novena",
-                      style: TextStyle(color: Colors.white.withOpacity(0.6))),
-                  onTap: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => NovenaPage()),
-                    )
-                  },
-                  //trailing: Icon(Icons.favorite_outline),
+              Consumer<UserState>(
+                builder: (context, userState, child) => Card(
+                  elevation: 0,
+                  color: Colors.transparent.withOpacity(0.5),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      side: BorderSide(width: 2, color: Colors.redAccent)),
+                  child: ListTile(
+                    title: Text("Novena",
+                        style: TextStyle(color: Colors.white.withOpacity(0.8))),
+                    subtitle: Text("Divine Mercy Novena",
+                        style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                    trailing: Text(
+                        "Day #" + userState.currentNovenaDay().toString(),
+                        style: TextStyle(color: Colors.white)),
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NovenaPage()),
+                      )
+                    },
+                    //trailing: Icon(Icons.favorite_outline),
+                  ),
                 ),
               ),
               Card(
@@ -177,6 +183,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(color: Colors.white.withOpacity(0.8))),
                   subtitle: Text("Divine Mercy Chapelet",
                       style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                  onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChapeletPage()),
+                    )
+                  },
                   //trailing: Icon(Icons.favorite_outline),
                 ),
               ),

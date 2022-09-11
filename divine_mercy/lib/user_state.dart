@@ -34,6 +34,15 @@ class UserState extends ChangeNotifier {
     return _locale;
   }
 
+  String localeLabel() {
+    String lang = locale.languageCode;
+    if (lang == UserState.LANGUAGE_POLISH) {
+      return "Polish";
+    } else {
+      return "English";
+    }
+  }
+
   int get max {
     String lang = locale.languageCode;
     if (lang == UserState.LANGUAGE_POLISH) {
@@ -184,33 +193,34 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     //double textWidth = MediaQuery.of(context).size.width * 0.8;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.redAccent,
-        title: Text(AppLocalizations.of(context)!.settings),
-      ),
-      body: SettingsList(
-        sections: [
-          SettingsSection(
-            title: Text('Common'),
-            tiles: <SettingsTile>[
-              SettingsTile.navigation(
-                leading: Icon(Icons.language),
-                title: Text('Language'),
-                value: Text('English'),
+    return Consumer<UserState>(
+        builder: (context, userState, child) => Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: Colors.redAccent,
+                title: Text(AppLocalizations.of(context)!.settings),
               ),
-              SettingsTile.switchTile(
-                onToggle: (value) {},
-                initialValue: true,
-                leading: Icon(Icons.format_paint),
-                title: Text('Enable custom theme'),
+              body: SettingsList(
+                sections: [
+                  SettingsSection(
+                    title: Text('Common'),
+                    tiles: <SettingsTile>[
+                      SettingsTile.navigation(
+                        leading: Icon(Icons.language),
+                        title: Text('Language'),
+                        value: Text(userState.locale.toString()),
+                      ),
+                      SettingsTile.switchTile(
+                        onToggle: (value) {},
+                        initialValue: true,
+                        leading: Icon(Icons.format_paint),
+                        title: Text('Enable custom theme'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
-      ),
-      /*
+              /*
       Column(
         //mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -245,7 +255,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       */
-    );
+            ));
     //);
   }
 }

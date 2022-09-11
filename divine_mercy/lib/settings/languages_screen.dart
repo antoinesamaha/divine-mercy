@@ -62,8 +62,6 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   void changeLanguage(String langText) {
     print('changing language ' + langText);
     Provider.of<UserState>(context, listen: false).locale = Locale(langText);
-    // setState(() {
-    //   languageIndex = index;
-    // });
+    Navigator.of(context).pop();
   }
 }
