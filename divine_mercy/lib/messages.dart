@@ -1,7 +1,27 @@
+import 'package:divine_mercy/messages_polish.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+
+import 'user_state.dart';
+
 class Messages {
+  Messages() {}
+
+  String getMessage(BuildContext context, int idx) {
+    String lang =
+        Provider.of<UserState>(context, listen: false).locale.languageCode;
+    if (lang == UserState.LANGUAGE_POLISH) {
+      return MessagesPolish().getMessage(idx);
+    } else {
+      return MessagesEnglish().getMessage(idx);
+    }
+  }
+}
+
+class MessagesEnglish {
   final int MAX = 1828;
 
-  Messages() {}
+  MessagesEnglish() {}
 
   String getMessage(int idx) {
     String message = "Not Found";

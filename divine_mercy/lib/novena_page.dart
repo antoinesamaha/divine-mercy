@@ -4,17 +4,29 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
 import 'messages.dart';
+import 'novena/novena_days_prayer.dart';
 
-class MessagePage extends StatefulWidget {
+class NovenaPage extends StatefulWidget {
   int randomIndex = 0;
 
-  MessagePage({Key? key}) : super(key: key) {}
+  NovenaPage({Key? key}) : super(key: key) {}
 
   @override
-  _MessagePageState createState() => _MessagePageState();
+  _NovenaPageState createState() => _NovenaPageState();
 }
 
-class _MessagePageState extends State<MessagePage> {
+class _NovenaPageState extends State<NovenaPage> {
+  String _htmlText(int fontSize, bool bold, String text) {
+    String boldSection = bold ? "font-weight: bold;" : "";
+    return "<div style=\"" +
+        boldSection +
+        "color:black;font-size:" +
+        fontSize.toString() +
+        "px;\">" +
+        text +
+        "</div></br>";
+  }
+
   @override
   Widget build(BuildContext context) {
     double textWidth = MediaQuery.of(context).size.width * 0.8;
@@ -24,22 +36,21 @@ class _MessagePageState extends State<MessagePage> {
           onHorizontalDragEnd: (dragEndDetails) {
             if (dragEndDetails.primaryVelocity! < 0.0) {
               // Page forwards
-              print('Move page forwards');
-              Provider.of<UserState>(context, listen: false).nextPage();
+              print('Next novena day');
+              Provider.of<UserState>(context, listen: false).nextNovenaDay();
             } else if (dragEndDetails.primaryVelocity! > 0) {
               // Page backwards
-              print('Move page backwards');
-              Provider.of<UserState>(context, listen: false).previousPage();
+              print('Previous novena day');
+              Provider.of<UserState>(context, listen: false)
+                  .previousNovenaDay();
             }
           },
           child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
                 backgroundColor: Colors.redAccent,
-                title: Text("Message " +
-                    (userState.randomMode
-                        ? userState.randomIndex.toString()
-                        : userState.messageIndex.toString())),
+                title: Text(
+                    "Novena day " + userState.currentNovenaDay().toString()),
               ),
               body: Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 30.0),
@@ -51,15 +62,27 @@ class _MessagePageState extends State<MessagePage> {
                           child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         child: SelectableHtml(
-                          data: "<div style=\"color:black;font-size:" +
-                              userState.fontSize.toString() +
-                              "px;\">" +
-                              (userState.randomMode
-                                  ? Messages().getMessage(
-                                      context, userState.randomIndex)
-                                  : Messages().getMessage(
-                                      context, userState.messageIndex)) +
-                              "</div>",
+                          data: _htmlText(userState.fontSize + 3, true,
+                                  "Introduction") +
+                              _htmlText(
+                                  userState.fontSize,
+                                  false,
+                                  (DMNovenaDays.getIntroduction(
+                                      userState.currentNovenaDay()))) +
+                              _htmlText(userState.fontSize + 3, true,
+                                  "Prayer to Jesus") +
+                              _htmlText(
+                                  userState.fontSize,
+                                  false,
+                                  (DMNovenaDays.getPrayerToJesus(
+                                      userState.currentNovenaDay()))) +
+                              _htmlText(userState.fontSize + 3, true,
+                                  "Prayer to the Father") +
+                              _htmlText(
+                                  userState.fontSize,
+                                  false,
+                                  (DMNovenaDays.getPrayerToTheFather(
+                                      userState.currentNovenaDay()))),
                         ),
                         /*
                             Text(
@@ -91,7 +114,7 @@ class _MessagePageState extends State<MessagePage> {
                       heroTag: "previous",
                       onPressed: () {
                         Provider.of<UserState>(context, listen: false)
-                            .previousPage();
+                            .previousNovenaDay();
                       },
                       child: Icon(Icons.navigate_before),
                     ),
@@ -99,7 +122,7 @@ class _MessagePageState extends State<MessagePage> {
                       heroTag: "next",
                       onPressed: () {
                         Provider.of<UserState>(context, listen: false)
-                            .nextPage();
+                            .nextNovenaDay();
                       },
                       child: Icon(Icons.navigate_next),
                     )

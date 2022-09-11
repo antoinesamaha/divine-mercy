@@ -1,6 +1,7 @@
 {
-    "settings": "Settings",
-    "@settings": {
-      "description": "Settings menu title"
-    }
+  "divine_mercy": "Divine Mercy123",
+  "settings": "Settings123",
+  "@settings": {
+    "description": "Settings menu title"
+  }
 }

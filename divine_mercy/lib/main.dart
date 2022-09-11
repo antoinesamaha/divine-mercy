@@ -1,4 +1,4 @@
-import 'package:divine_mercy/message_page.dart';
+import 'package:divine_mercy/settings/settings_screen.dart';
 import 'package:divine_mercy/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +6,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'cards/diary_card.dart';
+import 'l10n/l10n.dart';
+import 'novena_page.dart';
 // import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() {
@@ -18,20 +20,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Locale locale = Provider.of<UserState>(context, listen: true).locale;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Divine Mercy',
-      locale: Provider.of<UserState>(context, listen: false).locale,
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        Locale('en', ''), // English, no country code
-        Locale('pl', ''), // Polish, no country code
-      ],
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -71,14 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return
-
         // MultiProvider(
         //       providers: [
         //     ChangeNotifierProvider.value(
         //       value: Counter(),
         //     ),
         //   ],
-
         Container(
       decoration: BoxDecoration(
           color: Colors.black87,
@@ -90,6 +84,20 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Text(widget.title),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                print("Settings pushed");
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SettingsScreen()));
+                /*SettingsPage()*/
+              },
+            )
+          ],
         ),
         drawer: Drawer(
           // Add a ListView to the drawer. This ensures the user can scroll
@@ -115,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: const Text('Settings'),
                 tileColor: Colors.redAccent,
                 onTap: () {
+                  print("Settings pushed");
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => SettingsPage()),
@@ -137,8 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ]),*/
               DiaryCard(random: false),
               DiaryCard(random: true),
-              // diaryCard(false),
-              // diaryCard(true),
               Card(
                 elevation: 0,
                 color: Colors.transparent.withOpacity(0.5),
@@ -150,6 +157,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(color: Colors.white.withOpacity(0.8))),
                   subtitle: Text("Divine Mercy Novena",
                       style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                  onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NovenaPage()),
+                    )
+                  },
                   //trailing: Icon(Icons.favorite_outline),
                 ),
               ),

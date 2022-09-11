@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:settings_ui/settings_ui.dart';
+
+import 'messages_polish.dart';
 
 class UserState extends ChangeNotifier {
   static const int MAX = 1828;
+  static const String KEY_NOVENA_DAY = 'novena-day';
   static const String KEY_MESSAGE_INDEX = 'message-index';
   static const String KEY_MESSAGE_LANGUAGE = 'message-language';
 
@@ -16,6 +20,7 @@ class UserState extends ChangeNotifier {
 
   int fontSize = 22;
   int messageIndex = 1;
+  int _novenaDay = 1;
   Locale _locale = Locale(LANGUAGE_ENGLISH);
 
   bool _randomMode = false;
@@ -27,6 +32,15 @@ class UserState extends ChangeNotifier {
 
   Locale get locale {
     return _locale;
+  }
+
+  int get max {
+    String lang = locale.languageCode;
+    if (lang == UserState.LANGUAGE_POLISH) {
+      return MessagesPolish().MAX;
+    } else {
+      return MessagesEnglish().MAX;
+    }
   }
 
   bool get randomMode {
@@ -41,7 +55,6 @@ class UserState extends ChangeNotifier {
   int get randomIndex {
     if (_randomIndex == 0) {
       var randomGenerator = new Random();
-      int max = Messages().MAX;
       _randomIndex = randomGenerator.nextInt(max);
     }
 
@@ -67,6 +80,13 @@ class UserState extends ChangeNotifier {
       await prefs.setInt(KEY_MESSAGE_INDEX, messageIndex);
     }
 
+    if (prefs.containsKey(KEY_NOVENA_DAY)) {
+      _novenaDay = prefs.getInt(KEY_NOVENA_DAY) ?? 1;
+    } else {
+      _novenaDay = 1;
+      await prefs.setInt(KEY_NOVENA_DAY, _novenaDay);
+    }
+
     if (prefs.containsKey(KEY_MESSAGE_LANGUAGE)) {
       String language =
           prefs.getString(KEY_MESSAGE_LANGUAGE) ?? LANGUAGE_ENGLISH;
@@ -83,12 +103,30 @@ class UserState extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(KEY_MESSAGE_INDEX, messageIndex);
     await prefs.setString(KEY_MESSAGE_LANGUAGE, _locale.languageCode);
+    await prefs.setInt(KEY_NOVENA_DAY, _novenaDay);
+  }
+
+  // --------------
+  // Messages Pages
+  // --------------
+
+  int currentIndex() {
+    return randomMode ? randomIndex : messageIndex;
+  }
+
+  String currentMessage() {
+    String lang = locale.languageCode;
+    if (lang == UserState.LANGUAGE_POLISH) {
+      return MessagesPolish().getMessage(currentIndex());
+    } else {
+      return MessagesEnglish().getMessage(currentIndex());
+    }
   }
 
   nextPage() {
     if (randomMode) {
       randomIndex++;
-      if (randomIndex > MAX) randomIndex = 1;
+      if (randomIndex > max) randomIndex = 1;
       notifyListeners();
     } else {
       messageIndex++;
@@ -110,6 +148,28 @@ class UserState extends ChangeNotifier {
       save();
     }
   }
+
+  // ----------
+  // Novena Day
+  // ----------
+
+  int currentNovenaDay() {
+    return _novenaDay;
+  }
+
+  nextNovenaDay() {
+    _novenaDay++;
+    if (_novenaDay > 9) _novenaDay = 1;
+    notifyListeners();
+    save();
+  }
+
+  previousNovenaDay() {
+    _novenaDay--;
+    if (_novenaDay <= 0) _novenaDay = 9;
+    notifyListeners();
+    save();
+  }
 }
 
 class SettingsPage extends StatefulWidget {
@@ -122,7 +182,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    double textWidth = MediaQuery.of(context).size.width * 0.8;
+    //double textWidth = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -130,47 +190,61 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Colors.redAccent,
         title: Text(AppLocalizations.of(context)!.settings),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Flexible(
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Row(
-                        children: <Widget>[
-                          ListTile(
-                            title: Icon(Icons.flag),
-                            leading: Radio<Locale>(
-                              value: Locale("en"),
-                              groupValue:
-                                  Provider.of<UserState>(context, listen: false)
-                                      .locale,
-                              onChanged: (Locale? value) {
-                                Provider.of<UserState>(context, listen: false)
-                                    .locale = Locale("en");
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: Icon(Icons.flag),
-                            leading: Radio<Locale>(
-                              value: Locale("pl"),
-                              groupValue:
-                                  Provider.of<UserState>(context, listen: false)
-                                      .locale,
-                              onChanged: (Locale? value) {
-                                Provider.of<UserState>(context, listen: false)
-                                    .locale = Locale("pl");
-                              },
-                            ),
-                          ),
-                        ],
-                      )))
+      body: SettingsList(
+        sections: [
+          SettingsSection(
+            title: Text('Common'),
+            tiles: <SettingsTile>[
+              SettingsTile.navigation(
+                leading: Icon(Icons.language),
+                title: Text('Language'),
+                value: Text('English'),
+              ),
+              SettingsTile.switchTile(
+                onToggle: (value) {},
+                initialValue: true,
+                leading: Icon(Icons.format_paint),
+                title: Text('Enable custom theme'),
+              ),
             ],
-          ))),
+          ),
+        ],
+      ),
+      /*
+      Column(
+        //mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              ListTile(
+                title: Icon(Icons.flag),
+                leading: Radio<Locale>(
+                  value: Locale("en"),
+                  groupValue:
+                      Provider.of<UserState>(context, listen: false).locale,
+                  onChanged: (Locale? value) {
+                    Provider.of<UserState>(context, listen: false).locale =
+                        Locale("en");
+                  },
+                ),
+              ),
+              ListTile(
+                title: Icon(Icons.flag),
+                leading: Radio<Locale>(
+                  value: Locale("pl"),
+                  groupValue:
+                      Provider.of<UserState>(context, listen: false).locale,
+                  onChanged: (Locale? value) {
+                    Provider.of<UserState>(context, listen: false).locale =
+                        Locale("pl");
+                  },
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+      */
     );
     //);
   }
