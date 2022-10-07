@@ -1,9 +1,11 @@
 import 'package:divine_mercy/user_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'currentmessage_screen.dart';
 import 'languages_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -23,7 +25,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  void changeLanguage(String langText) {
+    print('changing language ' + langText);
+    Provider.of<UserState>(context, listen: false).locale = Locale(langText);
+    // Navigator.of(context).pop();
+  }
+
   Widget buildSettingsList() {
+    return Consumer<UserState>(
+        builder: (context, userState, child) => Center(
+                child: Column(
+              children: [
+                Row(children: [
+                  SizedBox(width: 30),
+                  Text(
+                    'Language',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(width: 30),
+                  Expanded(
+                    child: DropdownButton(
+                        isExpanded: true,
+                        items: const [
+                          DropdownMenuItem(child: Text("English"), value: "en"),
+                          DropdownMenuItem(child: Text("Polish"), value: "pl")
+                        ],
+                        value: userState.locale.languageCode,
+                        onChanged: (String? value) {
+                          print(value.toString());
+                          changeLanguage(value.toString());
+                        }),
+                  ),
+                  Expanded(child: SizedBox(height: 10)),
+                ]),
+                SizedBox(height: 10),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  SizedBox(width: 30),
+                  Text('Current message', style: TextStyle(fontSize: 16)),
+                  SizedBox(width: 30),
+                  Expanded(
+                      child: TextFormField(
+                    initialValue: userState.messageIndex.toString(),
+                    decoration: InputDecoration(labelText: 'Enter Number'),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  )),
+                  Expanded(child: SizedBox(height: 10)),
+                ])
+              ],
+            )));
+  }
+
+  Widget buildSettingsList_old() {
     return Consumer<UserState>(
         builder: (context, userState, child) => SettingsList(
               sections: [
@@ -37,6 +90,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onPressed: (context) {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => LanguagesScreen(),
+                        ));
+                      },
+                    ),
+                    SettingsTile(
+                      title: Text('Current message'),
+                      description: Text(userState.messageIndex.toString()),
+                      leading: Icon(Icons.bookmark),
+                      onPressed: (context) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => CurrentMessageScreen(),
                         ));
                       },
                     ),
