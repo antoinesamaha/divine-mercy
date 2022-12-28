@@ -31,6 +31,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Navigator.of(context).pop();
   }
 
+  void setNextMessage(int nextMessage) {
+    print('set next message ' + nextMessage.toString());
+    Provider.of<UserState>(context, listen: false).messageIndex = nextMessage;
+    // Navigator.of(context).pop();
+  }
+
   Widget buildSettingsList() {
     return Consumer<UserState>(
         builder: (context, userState, child) => Center(
@@ -69,6 +75,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     decoration: InputDecoration(labelText: 'Enter Number'),
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    onChanged: (String? value) {
+                      print("new message " + value.toString());
+                      setNextMessage(int.parse(value.toString()));
+                    },
                   )),
                   Expanded(child: SizedBox(height: 10)),
                 ])

@@ -155,13 +155,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       side: BorderSide(width: 2, color: Colors.redAccent)),
                   child: ListTile(
-                    title: Text("Novena",
-                        style: TextStyle(color: Colors.white.withOpacity(0.8))),
-                    subtitle: Text("Divine Mercy Novena",
-                        style: TextStyle(color: Colors.white.withOpacity(0.6))),
-                    trailing: Text(
-                        "Day #" + userState.currentNovenaDay().toString(),
+                    title: Text(
+                        "Novena day " + userState.currentNovenaDay().toString(),
                         style: TextStyle(color: Colors.white)),
+                    // subtitle: Text("Divine Mercy Novena",
+                    //     style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                    // trailing: Text(
+                    //     "Day #" + userState.currentNovenaDay().toString(),
+                    //     style: TextStyle(color: Colors.white)),
                     onTap: () => {
                       Navigator.push(
                         context,
@@ -179,10 +180,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     side: BorderSide(width: 2, color: Colors.redAccent)),
                 child: ListTile(
-                  title: Text("Chapelet",
-                      style: TextStyle(color: Colors.white.withOpacity(0.8))),
-                  subtitle: Text("Divine Mercy Chapelet",
-                      style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                  title:
+                      Text("Chapelet", style: TextStyle(color: Colors.white)),
+                  // subtitle: Text("Divine Mercy Chapelet",
+                  //     style: TextStyle(color: Colors.white.withOpacity(0.6))),
                   onTap: () => {
                     Navigator.push(
                       context,

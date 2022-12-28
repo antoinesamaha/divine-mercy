@@ -4,6 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
 import 'messages.dart';
+import 'settings/settings_screen.dart';
 
 class MessagePage extends StatefulWidget {
   int randomIndex = 0;
@@ -17,7 +18,7 @@ class MessagePage extends StatefulWidget {
 class _MessagePageState extends State<MessagePage> {
   @override
   Widget build(BuildContext context) {
-    double textWidth = MediaQuery.of(context).size.width * 0.8;
+    // double textWidth = MediaQuery.of(context).size.width * 0.8;
 
     return Consumer<UserState>(
       builder: (context, userState, child) => GestureDetector(
@@ -35,12 +36,24 @@ class _MessagePageState extends State<MessagePage> {
           child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Colors.redAccent,
-                title: Text("Message " +
-                    (userState.randomMode
-                        ? userState.randomIndex.toString()
-                        : userState.messageIndex.toString())),
-              ),
+                  backgroundColor: Colors.redAccent,
+                  title: Row(children: <Widget>[
+                    Text("Message  " +
+                        (userState.randomMode
+                            ? userState.randomIndex.toString()
+                            : userState.messageIndex.toString())),
+                    SizedBox(width: 10),
+                    userState.randomMode
+                        ? SizedBox(width: 1)
+                        : IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SettingsScreen()));
+                            })
+                  ])),
               body: Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 30.0),
                   child: Center(

@@ -19,7 +19,7 @@ class UserState extends ChangeNotifier {
   static const String LANGUAGE_POLISH = 'pl';
 
   int fontSize = 22;
-  int messageIndex = 1;
+  int _messageIndex = 1;
   int _novenaDay = 1;
   Locale _locale = Locale(LANGUAGE_ENGLISH);
 
@@ -58,14 +58,19 @@ class UserState extends ChangeNotifier {
 
   set randomMode(bool mode) {
     _randomMode = mode;
-    if (mode == false) _randomIndex = 0;
-  }
-
-  int get randomIndex {
-    if (_randomIndex == 0) {
+    if (mode == false) {
+      _randomIndex = 0;
+    } else {
       var randomGenerator = new Random();
       _randomIndex = randomGenerator.nextInt(max);
     }
+  }
+
+  int get randomIndex {
+    // if (_randomIndex == 0) {
+    //   var randomGenerator = new Random();
+    //   _randomIndex = randomGenerator.nextInt(max);
+    // }
 
     return _randomIndex;
   }
@@ -121,6 +126,15 @@ class UserState extends ChangeNotifier {
 
   int currentIndex() {
     return randomMode ? randomIndex : messageIndex;
+  }
+
+  int get messageIndex {
+    return _messageIndex;
+  }
+
+  set messageIndex(int idx) {
+    _messageIndex = idx;
+    notifyListeners();
   }
 
   String currentMessage() {

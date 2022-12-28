@@ -35,10 +35,15 @@ class _DiaryCard extends State<DiaryCard> {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   side: BorderSide(width: 2, color: Colors.redAccent)),
               child: ListTile(
-                title: Text("St Faustina's Diary",
-                    style: TextStyle(color: Colors.white.withOpacity(0.8))),
-                subtitle: Text("Divine Mercy In My Saul",
-                    style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                title: Text(
+                    widget.random
+                        ? "Diary Random message"
+                        : "Diary message " + userState.messageIndex.toString(),
+                    style: TextStyle(color: Colors.white)),
+                //Text("St Faustina's Diary",
+                //style: TextStyle(color: Colors.white.withOpacity(0.8))),
+                // subtitle: Text("Divine Mercy In My Saul",
+                //     style: TextStyle(color: Colors.white.withOpacity(0.6))),
                 onTap: () => {
                   navigatorPushMessage(userState)
                   //   if (widget.random)
@@ -53,17 +58,15 @@ class _DiaryCard extends State<DiaryCard> {
                   //       )
                   //     }
                 },
+                /*
                 trailing:
-                    /*Icon(
-                      Icons.favorite_outline,
-                      color: Colors.amber,
-                    ) */
                     Text(
                         widget.random
                             ? "Random message"
                             : "Next message #" +
                                 userState.messageIndex.toString(),
                         style: TextStyle(color: Colors.white)),
+                        */
               ),
             ));
   }
