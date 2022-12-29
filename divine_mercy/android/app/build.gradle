@@ -43,7 +43,7 @@ android {
         //applicationId "com.example.divine_mercy"
         applicationId "com.barmaja.diaryStFostina2"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
