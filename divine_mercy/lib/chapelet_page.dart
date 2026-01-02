@@ -34,7 +34,9 @@ class _ChapeletPageState extends State<ChapeletPage> {
             backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.redAccent,
-              title: Text("Divine Mercy Chapelet"),
+              iconTheme: IconThemeData(color: Colors.white),
+              title: Text("Divine Mercy Chapelet",
+                  style: TextStyle(color: Colors.white)),
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 30.0),
@@ -50,8 +52,9 @@ class _ChapeletPageState extends State<ChapeletPage> {
                           Image(
                               image:
                                   AssetImage('assets/images/chapletbeads.jpg')),
-                          SelectableHtml(
-                              data: _chapeletContent(userState.fontSize))
+                          SelectionArea(
+                              child: Html(
+                                  data: _chapeletContent(userState.fontSize)))
                         ],
                       ),
                     ))

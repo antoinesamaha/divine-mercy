@@ -47,8 +47,10 @@ class _NovenaPageState extends State<NovenaPage> {
               backgroundColor: Colors.white,
               appBar: AppBar(
                 backgroundColor: Colors.redAccent,
+                iconTheme: IconThemeData(color: Colors.white),
                 title: Text(
-                    "Novena day " + userState.currentNovenaDay().toString()),
+                    "Novena day " + userState.currentNovenaDay().toString(),
+                    style: TextStyle(color: Colors.white)),
               ),
               body: Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 30.0),
@@ -59,7 +61,8 @@ class _NovenaPageState extends State<NovenaPage> {
                       Flexible(
                           child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
-                        child: SelectableHtml(
+                        child: SelectionArea(
+                            child: Html(
                           data: NovenaPage.htmlText(userState.fontSize + 3,
                                   true, "Introduction") +
                               NovenaPage.htmlText(
@@ -81,7 +84,7 @@ class _NovenaPageState extends State<NovenaPage> {
                                   false,
                                   (DMNovenaDays.getPrayerToTheFather(
                                       userState.currentNovenaDay()))),
-                        ),
+                        )),
                       ))
                     ],
                   ))),
@@ -100,19 +103,21 @@ class _NovenaPageState extends State<NovenaPage> {
                   children: <Widget>[
                     FloatingActionButton(
                       heroTag: "previous",
+                      backgroundColor: Colors.redAccent,
                       onPressed: () {
                         Provider.of<UserState>(context, listen: false)
                             .previousNovenaDay();
                       },
-                      child: Icon(Icons.navigate_before),
+                      child: Icon(Icons.navigate_before, color: Colors.white),
                     ),
                     FloatingActionButton(
                       heroTag: "next",
+                      backgroundColor: Colors.redAccent,
                       onPressed: () {
                         Provider.of<UserState>(context, listen: false)
                             .nextNovenaDay();
                       },
-                      child: Icon(Icons.navigate_next),
+                      child: Icon(Icons.navigate_next, color: Colors.white),
                     )
                   ],
                 ),

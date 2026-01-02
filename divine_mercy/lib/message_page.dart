@@ -4,12 +4,9 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
 import 'messages.dart';
-import 'settings/settings_screen.dart';
 
 class MessagePage extends StatefulWidget {
-  int randomIndex = 0;
-
-  MessagePage({Key? key}) : super(key: key) {}
+  MessagePage({Key? key}) : super(key: key);
 
   @override
   _MessagePageState createState() => _MessagePageState();
@@ -37,21 +34,55 @@ class _MessagePageState extends State<MessagePage> {
               backgroundColor: Colors.white,
               appBar: AppBar(
                   backgroundColor: Colors.redAccent,
+                  iconTheme: IconThemeData(color: Colors.white),
                   title: Row(children: <Widget>[
-                    Text("Message  " +
-                        (userState.randomMode
-                            ? userState.randomIndex.toString()
-                            : userState.messageIndex.toString())),
+                    Text(
+                        "Message  " +
+                            (userState.randomMode
+                                ? userState.randomIndex.toString()
+                                : userState.messageIndex.toString()),
+                        style: TextStyle(color: Colors.white)),
                     SizedBox(width: 10),
-                    userState.randomMode
+                    !userState.randomMode
                         ? SizedBox(width: 1)
-                        : IconButton(
-                            icon: const Icon(Icons.edit),
+                        : TextButton.icon(
+                            icon: const Icon(Icons.bookmark_border,
+                                color: Colors.white),
+                            label: const Text('Make current',
+                                style: TextStyle(color: Colors.white)),
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SettingsScreen()));
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Make Current'),
+                                    content: Text(
+                                        'Set message ${userState.randomIndex} as your current message?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('Confirm'),
+                                        onPressed: () {
+                                          userState.messageIndex =
+                                              userState.randomIndex;
+                                          userState.randomMode = false;
+                                          userState.save();
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => SettingsScreen()));
                             })
                   ])),
               body: Padding(
@@ -63,7 +94,8 @@ class _MessagePageState extends State<MessagePage> {
                       Flexible(
                           child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
-                        child: SelectableHtml(
+                        child: SelectionArea(
+                            child: Html(
                           data: "<div style=\"color:black;font-size:" +
                               userState.fontSize.toString() +
                               "px;\">" +
@@ -73,7 +105,7 @@ class _MessagePageState extends State<MessagePage> {
                                   : Messages().getMessage(
                                       context, userState.messageIndex)) +
                               "</div>",
-                        ),
+                        )),
                         /*
                             Text(
                               Messages().getMessage(userState.messageIndex),
@@ -102,19 +134,21 @@ class _MessagePageState extends State<MessagePage> {
                   children: <Widget>[
                     FloatingActionButton(
                       heroTag: "previous",
+                      backgroundColor: Colors.redAccent,
                       onPressed: () {
                         Provider.of<UserState>(context, listen: false)
                             .previousPage();
                       },
-                      child: Icon(Icons.navigate_before),
+                      child: Icon(Icons.navigate_before, color: Colors.white),
                     ),
                     FloatingActionButton(
                       heroTag: "next",
+                      backgroundColor: Colors.redAccent,
                       onPressed: () {
                         Provider.of<UserState>(context, listen: false)
                             .nextPage();
                       },
-                      child: Icon(Icons.navigate_next),
+                      child: Icon(Icons.navigate_next, color: Colors.white),
                     )
                   ],
                 ),

@@ -19,6 +19,7 @@ class _DiaryCard extends State<DiaryCard> {
     } else {
       userState.randomMode = false;
     }
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => MessagePage()),

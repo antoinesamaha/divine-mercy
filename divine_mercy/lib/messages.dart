@@ -16,6 +16,16 @@ class Messages {
       return MessagesEnglish().getMessage(idx);
     }
   }
+
+  int getMax(BuildContext context) {
+    String lang =
+        Provider.of<UserState>(context, listen: false).locale.languageCode;
+    if (lang == UserState.LANGUAGE_POLISH) {
+      return MessagesPolish().MAX;
+    } else {
+      return MessagesEnglish().MAX;
+    }
+  }
 }
 
 class MessagesEnglish {

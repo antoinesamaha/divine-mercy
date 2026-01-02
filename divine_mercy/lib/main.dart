@@ -1,13 +1,13 @@
+import 'package:divine_mercy/message_page.dart';
+import 'package:divine_mercy/messages.dart';
 import 'package:divine_mercy/settings/settings_screen.dart';
 import 'package:divine_mercy/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'l10n/app_localizations.dart';
 
 import 'cards/diary_card.dart';
 import 'chapelet_page.dart';
-import 'l10n/l10n.dart';
 import 'novena_page.dart';
 // import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -65,6 +65,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _entryController = TextEditingController();
+
+  @override
+  void dispose() {
+    _entryController.dispose();
+    super.dispose();
+  }
+
+  void _navigateToEntry(BuildContext context) {
+    int? entryNumber = int.tryParse(_entryController.text);
+    if (entryNumber != null &&
+        entryNumber >= 1 &&
+        entryNumber <= Messages().getMax(context)) {
+      Provider.of<UserState>(context, listen: false).randomMode = true;
+      Provider.of<UserState>(context, listen: false).randomIndex = entryNumber;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            //builder: (context) => MessagePage(messageNumber: entryNumber)),
+            builder: (context) => MessagePage()),
+      );
+      _entryController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a number between 1 and ' +
+              Messages().getMax(context).toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return
@@ -134,9 +167,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         */
-        body: Center(
+        body: Align(
+          alignment: Alignment.bottomCenter,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               /*
               AnimatedTextKit(animatedTexts: [
@@ -180,8 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     side: BorderSide(width: 2, color: Colors.redAccent)),
                 child: ListTile(
-                  title:
-                      Text("Chapelet", style: TextStyle(color: Colors.white)),
+                  title: Text("Chaplet", style: TextStyle(color: Colors.white)),
                   // subtitle: Text("Divine Mercy Chapelet",
                   //     style: TextStyle(color: Colors.white.withOpacity(0.6))),
                   onTap: () => {
@@ -191,6 +224,41 @@ class _MyHomePageState extends State<MyHomePage> {
                     )
                   },
                   //trailing: Icon(Icons.favorite_outline),
+                ),
+              ),
+              Card(
+                elevation: 0,
+                color: Colors.transparent.withOpacity(0.5),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    side: BorderSide(width: 2, color: Colors.redAccent)),
+                child: ListTile(
+                  title: Text("Go to diary message #",
+                      style: TextStyle(color: Colors.white)),
+                  subtitle: TextField(
+                    controller: _entryController,
+                    keyboardType: TextInputType.number,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: "Enter number (1-" +
+                          Messages().getMax(context).toString() +
+                          ")",
+                      hintStyle:
+                          TextStyle(color: Colors.white.withOpacity(0.6)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.white.withOpacity(0.5)),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent),
+                      ),
+                    ),
+                    onSubmitted: (_) => _navigateToEntry(context),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.arrow_forward, color: Colors.white),
+                    onPressed: () => _navigateToEntry(context),
+                  ),
                 ),
               ),
             ],

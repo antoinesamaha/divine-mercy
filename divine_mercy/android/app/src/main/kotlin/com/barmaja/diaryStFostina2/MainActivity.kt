@@ -1,4 +1,4 @@
-package com.example.divine_mercy
+package com.barmaja.diaryStFostina2
 
 import io.flutter.embedding.android.FlutterActivity
 

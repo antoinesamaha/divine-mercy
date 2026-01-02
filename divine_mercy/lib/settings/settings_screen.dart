@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:divine_mercy/l10n/app_localizations.dart';
 
 import 'currentmessage_screen.dart';
 import 'languages_screen.dart';

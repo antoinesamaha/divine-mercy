@@ -1,8 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.divine_mercy">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
    <application
         android:label="divine_mercy"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:extractNativeLibs="true">
+        <property
+            android:name="android.app.PROPERTY_PAGE_SIZE_16KB_SUPPORTED"
+            android:value="true"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
