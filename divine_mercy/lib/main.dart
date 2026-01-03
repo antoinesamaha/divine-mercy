@@ -3,6 +3,7 @@ import 'package:divine_mercy/messages.dart';
 import 'package:divine_mercy/settings/settings_screen.dart';
 import 'package:divine_mercy/user_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'l10n/app_localizations.dart';
 
@@ -12,6 +13,11 @@ import 'novena_page.dart';
 // import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => UserState()),
   ], child: MyApp()));
@@ -179,6 +185,54 @@ class _MyHomePageState extends State<MyHomePage> {
                 ScaleAnimatedText("In You"),
                 ScaleAnimatedText("Jesus I Trust In You")
               ]),*/
+              Consumer<UserState>(builder: (context, userState, child) {
+                int totalMessages = Messages().getMax(context);
+                int currentPage = userState.messageIndex;
+                double progress = currentPage / totalMessages;
+
+                return Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    margin: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: CircularProgressIndicator(
+                            value: progress,
+                            strokeWidth: 10,
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.redAccent),
+                          ),
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "$currentPage",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "of $totalMessages",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
               DiaryCard(random: false),
               DiaryCard(random: true),
               Consumer<UserState>(
