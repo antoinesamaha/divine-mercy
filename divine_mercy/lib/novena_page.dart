@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
-import 'messages.dart';
 import 'novena/novena_days_prayer.dart';
 
 class NovenaPage extends StatefulWidget {
-  int randomIndex = 0;
-
   NovenaPage({Key? key}) : super(key: key) {}
 
   @override
